@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex h-[calc(100vh-80px)] overflow-hidden bg-gray-50 dark:bg-black" x-data="{ sidebarOpen: true }">
+    
+    <!-- Left sidebar -->
+    {% include 'dashboard/sidebar.html' %}
+
+    <!-- Right side content -->
+    <main class="flex-1 overflow-y-auto relative p-6 lg:p-10">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-gray-200 dark:border-gray-800 animate__animated animate__fadeInDown">
+            <div>
+                <h1 class="text-3xl font-serif font-black text-lightText dark:text-darkText tracking-tight">Manage Posts</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">View, edit, and publish your content.</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <a href="{% url 'add_post' %}" class="inline-flex items-center px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors shadow-[0_0_15px_rgba(0,102,255,0.3)]">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Add New Post
+                </a>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate__animated animate__fadeInUp">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-zinc-950 border-b border-gray-100 dark:border-gray-800">
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Author</th>
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-center">Featured</th>
+                            <th class="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                        {% for post in posts %}
+                        <tr class="group relative bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors duration-300">
+                            <!-- Neon hover strip -->
+                            <td class="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_10px_rgba(0,102,255,0.8)] transition-all duration-300"></td>
+                            
+                            <td class="py-4 px-6 text-sm text-gray-500 dark:text-gray-400">{{ forloop.counter }}</td>
+                            <td class="py-4 px-6">
+                                <span class="font-bold text-lightText dark:text-white">{{ post.title }}</span>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300">{{ post.category }}</span>
+                            </td>
+                            <td class="py-4 px-6 text-sm text-gray-600 dark:text-gray-300 font-medium">{{ post.author }}</td>
+                            <td class="py-4 px-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold {% if post.status == 'Published' %}bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400{% else %}bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400{% endif %}">
+                                    {{ post.status }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                {% if post.is_featured %}
+                                <div class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                {% else %}
+                                <div class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-right space-x-2">
+                                <a href="{% url 'edit_post' post.id %}" class="inline-flex items-center p-2 rounded-lg text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" title="Edit">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </a>
+                                <a href="{% url 'delete_post' post.id %}" class="inline-flex items-center p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Delete">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="py-12 text-center text-gray-500">
+                                <p>No posts available yet.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

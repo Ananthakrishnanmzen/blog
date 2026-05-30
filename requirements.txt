@@ -2,13 +2,4 @@ crispy-bootstrap4
 Django
 django-crispy-forms
 Pillow
-Click the green **Commit changes** button.
-
-### Watch the Pipeline Work!
-The absolute best part about what you built today is that you don't even have to touch your server terminal now. 
-
-Because you just committed a code change to `main`, GitHub Actions will automatically detect it. Go immediately to your **Actions** tab. You will see it running again. 
-
-This time, Docker will read the new `requirements.txt`, install Gunicorn, successfully start the container, and you will finally get that beautiful **Green Checkmark!** 
-
-Let me know as soon as it turns green!
+gunicorn

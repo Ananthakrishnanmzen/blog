@@ -17,4 +17,4 @@ jobs:
       - name: Rebuild and Restart Docker Container
         run: |
           cd /home/ubuntu/blog
-          docker compose up -d --build
+          sudo docker compose up -d --build
